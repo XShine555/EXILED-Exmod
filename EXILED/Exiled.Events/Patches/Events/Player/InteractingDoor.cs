@@ -48,12 +48,12 @@ namespace Exiled.Events.Patches.Events.Player
                 new(OpCodes.Ldarg_2),
 
                 // IsAllowed
-                new(OpCodes.Ldc_I4_1),
+                new(OpCodes.Ldloc_0),
 
                 // CanInteract
-                new(OpCodes.Ldloc_1),
+                new(OpCodes.Ldc_I4_1),
 
-                // InteractingDoorEventArgs ev = new(Player.Get(ply), __instance, colliderId, false, true);
+                // InteractingDoorEventArgs ev = new(Player.Get(ply), __instance, colliderId, bool, true);
                 new(OpCodes.Newobj, GetDeclaredConstructors(typeof(InteractingDoorEventArgs))[0]),
                 new(OpCodes.Dup),
                 new(OpCodes.Dup),
@@ -77,7 +77,7 @@ namespace Exiled.Events.Patches.Events.Player
             newInstructions.InsertRange(index, interactingEvent);
 
             offset = 2;
-            index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ldloc_0) + offset;
+            index = newInstructions.FindLastIndex(x => x.opcode == OpCodes.Ldloc_0) + offset;
             newInstructions.InsertRange(index, interactingEvent);
 
             newInstructions[newInstructions.Count - 1].labels.Add(retLabel);
